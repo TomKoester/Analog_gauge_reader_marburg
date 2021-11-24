@@ -262,64 +262,6 @@ def get_current_value(img, min_angle, max_angle, min_value, max_value, x, y, r, 
 
     return allvalues
 
-    #Alter Intel-Code
-    '''
-    # assumes the first line is the best one / berechnet mit dieser Line den altuellen Wert
-    x1 = final_line_list[0][0]
-    y1 = final_line_list[0][1]
-    x2 = final_line_list[0][2]
-    y2 = final_line_list[0][3]
-    cv2.line(img, (x1, y1), (x2, y2), (0, 255, 0), 2)
-
-    #for testing purposes, show the line overlayed on the original image
-    #cv2.imwrite('gauge-1-test.jpg', img)
-    cv2.imwrite('gauge-%s-lines-2.%s' % (gauge_number, file_type), img)
-
-    #find the farthest point from the center to be what is used to determine the angle
-    dist_pt_0 = dist_2_pts(x, y, x1, y1)
-    dist_pt_1 = dist_2_pts(x, y, x2, y2)
-    if (dist_pt_0 > dist_pt_1):
-        x_angle = x1 - x
-        y_angle = y - y1
-    else:
-        x_angle = x2 - x
-        y_angle = y - y2
-    # take the arc tan of y/x to find the angle
-    res = np.arctan(np.divide(float(y_angle), float(x_angle)))
-    #np.rad2deg(res) #coverts to degrees
-
-    # print x_angle
-    # print y_angle
-    # print res
-    # print np.rad2deg(res)
-
-    #these were determined by trial and error
-    res = np.rad2deg(res)
-    if x_angle > 0 and y_angle > 0:  #in quadrant I
-        final_angle = 270 - res
-    if x_angle < 0 and y_angle > 0:  #in quadrant II
-        final_angle = 90 - res
-    if x_angle < 0 and y_angle < 0:  #in quadrant III
-        final_angle = 90 - res
-    if x_angle > 0 and y_angle < 0:  #in quadrant IV
-        final_angle = 270 - res
-
-    #print final_angle
-
-    old_min = float(min_angle)
-    old_max = float(max_angle)
-
-    new_min = float(min_value)
-    new_max = float(max_value)
-
-    old_value = final_angle
-
-    old_range = (old_max - old_min)
-    new_range = (new_max - new_min)
-    new_value = (((old_value - old_min) * new_range) / old_range) + new_min
-
-    return new_value
-    '''
 
 def main():
     gauge_number = 3
