@@ -203,6 +203,7 @@ def get_current_value(img, min_angle, max_angle, min_value, max_value, x, y, r, 
                 final_line_list.append([x1, y1, x2, y2])
 
     #fuegt lines in das Image ein
+    print(len(final_line_list))
     for i in range(0,len(final_line_list)):
         x1 = final_line_list[i][0]
         y1 = final_line_list[i][1]
@@ -210,54 +211,60 @@ def get_current_value(img, min_angle, max_angle, min_value, max_value, x, y, r, 
         y2 = final_line_list[i][3]
         cv2.line(img, (x1, y1), (x2, y2), (0, 255, 0), 2)
 
-
-
+    allvalues = []
+    #hardcoded wanted Values
+    wantedValues = 2
     #testing to read more values from more lines
-    for i in range(0,len(final_line_list)):
-        x1 = final_line_list[i][0]
-        y1 = final_line_list[i][1]
-        x2 = final_line_list[i][2]
-        y2 = final_line_list[i][3]
+    if len(final_line_list) >= wantedValues:
+        for i in range(0, len(final_line_list)):
+            x1 = final_line_list[i][0]
+            y1 = final_line_list[i][1]
+            x2 = final_line_list[i][2]
+            y2 = final_line_list[i][3]
 
-        dist_pt_0 = dist_2_pts(x, y, x1, y1)
-        dist_pt_1 = dist_2_pts(x, y, x2, y2)
+            dist_pt_0 = dist_2_pts(x, y, x1, y1)
+            dist_pt_1 = dist_2_pts(x, y, x2, y2)
 
-        if (dist_pt_0 > dist_pt_1):
-            x_angle = x1 - x
-            y_angle = y - y1
-        else:
-            x_angle = x2 - x
-            y_angle = y - y2
+            if (dist_pt_0 > dist_pt_1):
+                x_angle = x1 - x
+                y_angle = y - y1
+            else:
+                x_angle = x2 - x
+                y_angle = y - y2
 
-        res = np.arctan(np.divide(float(y_angle), float(x_angle)))
+            res = np.arctan(np.divide(float(y_angle), float(x_angle)))
 
-        res = np.rad2deg(res)
-        if x_angle > 0 and y_angle > 0:  # in quadrant I
-            final_angle = 270 - res
-        if x_angle < 0 and y_angle > 0:  # in quadrant II
-            final_angle = 90 - res
-        if x_angle < 0 and y_angle < 0:  # in quadrant III
-            final_angle = 90 - res
-        if x_angle > 0 and y_angle < 0:  # in quadrant IV
-            final_angle = 270 - res
+            res = np.rad2deg(res)
+            if x_angle > 0 and y_angle > 0:  # in quadrant I
+                final_angle = 270 - res
+            if x_angle < 0 and y_angle > 0:  # in quadrant II
+                final_angle = 90 - res
+            if x_angle < 0 and y_angle < 0:  # in quadrant III
+                final_angle = 90 - res
+            if x_angle > 0 and y_angle < 0:  # in quadrant IV
+                final_angle = 270 - res
 
-        old_min = float(min_angle)
-        old_max = float(max_angle)
+            old_min = float(min_angle)
+            old_max = float(max_angle)
 
-        new_min = float(min_value)
-        new_max = float(max_value)
+            new_min = float(min_value)
+            new_max = float(max_value)
 
-        old_value = final_angle
+            old_value = final_angle
 
-        old_range = (old_max - old_min)
-        new_range = (new_max - new_min)
-        new_value = (((old_value - old_min) * new_range) / old_range) + new_min
+            old_range = (old_max - old_min)
+            new_range = (new_max - new_min)
+            new_value = (((old_value - old_min) * new_range) / old_range) + new_min
 
-        list.append(new_value)
+            allvalues.append(new_value)
 
+
+
+    return allvalues
+
+    #Alter Intel-Code
+    '''
     # assumes the first line is the best one / berechnet mit dieser Line den altuellen Wert
-
-
     x1 = final_line_list[0][0]
     y1 = final_line_list[0][1]
     x2 = final_line_list[0][2]
@@ -312,10 +319,12 @@ def get_current_value(img, min_angle, max_angle, min_value, max_value, x, y, r, 
     new_value = (((old_value - old_min) * new_range) / old_range) + new_min
 
     return new_value
+    '''
 
 def main():
     gauge_number = 3
     file_type ='png'
+
     # name the calibration image of your gauge 'gauge-#.jpg', for example 'gauge-5.jpg'.  It's written this way so you can easily try multiple images
     min_angle, max_angle, min_value, max_value, units, x, y, r = calibrate_gauge(gauge_number, file_type)
 
@@ -324,7 +333,9 @@ def main():
 
     img = cv2.resize(img,(800,800))
     val = get_current_value(img, min_angle, max_angle, min_value, max_value, x, y, r, gauge_number, file_type)
-    print ("Current reading: %s %s" %(val, units))
+    print ("Current reading:  " )
+    for i in range(0,len(val)):
+        print(val[i])
     cv2.imshow("img", img)
     cv2.waitKey(0)
 
