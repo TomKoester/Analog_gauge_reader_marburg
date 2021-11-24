@@ -216,7 +216,7 @@ def get_current_value(img, min_angle, max_angle, min_value, max_value, x, y, r, 
     wantedValues = 2
     #testing to read more values from more lines
     if len(final_line_list) >= wantedValues:
-        for i in range(0, len(final_line_list)):
+        for i in range(0, wantedValues):
             x1 = final_line_list[i][0]
             y1 = final_line_list[i][1]
             x2 = final_line_list[i][2]
